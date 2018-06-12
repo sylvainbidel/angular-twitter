@@ -1,0 +1,14 @@
+<p>
+  twitter works!
+</p>
+
+
+ <li *ngFor="let n of tweets$ | async ">
+   yes
+{{n.data.text}}}
+
+</li>
+
+<button
+        (click)="refresh()">Refresh</button>
+
