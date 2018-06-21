@@ -3,23 +3,27 @@ import {Tweet} from './tweet';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { NgZone  } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TwitterService {
 
-  constructor( private http: HttpClient) { }
+  constructor( private http: HttpClient, private zone: NgZone) { }
   tweets:Tweet[]=[];
   getTweets():Observable<Tweet[]> {
      return Observable.create((observer) => {
           this.tweets = [];
-          let eventSource = new EventSource('http://localhost:9095/tweets?q=bitcoin');
+          let eventSource = new EventSource('http://localhost:9095/tweets?q=guitar');
           eventSource.onmessage = (event) => {
-            console.debug('Received event: ', event);
+           console.log('Received event: ', event);
             let json = JSON.parse(event.data);
-            this.tweets.push(new Tweet(json['text']));
+
+            console.log('TWEET '+json['text']);
+            this.tweets.unshift(new Tweet(json['text']));
             observer.next(this.tweets);
+            this.zone.run(() => {});
           };
           eventSource.onerror = (error) => {
             // readyState === 0 (closed) means the remote source closed the connection,

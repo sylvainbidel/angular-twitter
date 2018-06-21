@@ -15,7 +15,7 @@ export class TwitterComponent implements OnInit {
   tweets$: Observable<Tweet[]>;
   ngOnInit() {
     this.tweets$=this.twitterService.getTweets()
-    this.tweets$.subscribe((t)=>{console.log('yo')});
+
   }
 
   refresh() {
